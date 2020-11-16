@@ -10,7 +10,7 @@ public class Transcation {
       private Date timeStamp;
 
     // Transcation description
-      private String memo;
+      private String memo = " ";
 
       //Account in which transc occured
       private Account inAccount;
@@ -28,4 +28,18 @@ public class Transcation {
           this.memo = memo;
 
       }
+      public double getAmount(){
+          return this.amount;
+      }
+      //transcation Summary
+      public String getSummaryLine(){
+          if(this.amount >= 0){
+              return String.format("%s: #%.02f : %s", this.timeStamp.toString(),
+                      this.amount, this.memo);
+          }else{
+              return String.format("%s : #(0.2f) : %s", this.timeStamp.toString(),
+                      this.amount, this.memo);
+          }
+      }
+
 }

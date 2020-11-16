@@ -15,6 +15,8 @@ public class Account {
 
     // list of transcations for this account
     private ArrayList<Transcation> transcations;
+    private double balance;
+
 
     public Account(String name, User holder, Bank theBank){
      // set Account name
@@ -36,5 +38,37 @@ public class Account {
         return this.uuid;
     }
 
+    public String getSummaryLine() {
 
-}
+        //getBalance
+        double balance = this.getBalance();
+
+        //formatting summaryline
+        if (this.balance >= 0) {
+     return String.format("%s : #%.02f :%s",
+             this.uuid, balance, this.name);
+
+        }else {
+            return String.format("%s : #(%.02f) :%s",
+                    this.uuid, balance, this.name);
+        }
+    }
+    public double getBalance(){
+        double balance = 0;
+        for(Transcation t : this.transcations){
+            balance += t.getAmount();
+        }
+        return balance;
+    }
+     public void printTransHistory(){
+        System.out.printf("\nTranscation History for account %s\n", this.uuid);
+        for(int t = this.transcations.size()-1; t>=0; t--){
+            System.out.printf(this.transcations.get(t).getSummaryLine());
+        }
+        System.out.println();
+     }
+
+    }
+
+
+
