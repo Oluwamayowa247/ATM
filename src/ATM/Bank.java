@@ -24,7 +24,7 @@ public class Bank {
         boolean nonUnique;
         do{
             // uuid generation
-            uuid = " ";
+            uuid = "";
             for(int c = 0; c<len; c++){
                  uuid += ((Integer)rng.nextInt(10)).toString();
 
@@ -84,14 +84,19 @@ public class Bank {
         //search through list of user
         for(User u : this.users){
             //check for userID
-            if(u.getUUID().compareTo(userID) == 0 && u.validatePin(pin)){
+//            System.out.println( u.getUUID().length());
+//            System.out.println( userID.length());
+//
+
+            if(u.getUUID().compareTo(userID)== 0 && u.validatePin(pin)){
+                System.out.println(u.getUUID());
                 return u;
             }
         }
         return null;
     }
 
-public String getName(){
- return this.name;
+    public String getName(){
+     return this.name;
  }
 }

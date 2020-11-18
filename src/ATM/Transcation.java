@@ -30,6 +30,7 @@ public class Transcation {
       }
       public double getAmount(){
           return this.amount;
+
       }
       //transcation Summary
       public String getSummaryLine(){

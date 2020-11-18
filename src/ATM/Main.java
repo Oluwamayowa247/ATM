@@ -8,11 +8,13 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         Bank theBank = new Bank("The Amazing Bank");
         // add user
-        User aUser = theBank.addUser("John", "Mike", "2222");
+        User aUser = theBank.addUser("John", "Mike", "1234");
         //check account for user
         Account newAccount = new Account ("Checking",aUser, theBank);
-//        aUser.addAccount(newAccount);
+        Account newAccount1 =  new Account("Savings", aUser, theBank);
+//         aUser.addAccount(newAccount);
 //        theBank.addAccount(newAccount);
+
 
         User ourUser;
         while(true){
@@ -41,6 +43,8 @@ public class Main {
          authUser = theBank.userLogin(userID, pin);
          if (authUser == null) {
              System.out.println("Incorrect User ID/pin combination, Please Don't Let me Swear For you");
+         }else {
+             System.out.println();
          }
      } while (authUser == null);
      return authUser;
@@ -54,7 +58,7 @@ public class Main {
 
     do {
         System.out.printf("Welcome %s, What would you like to do? ", theUser.getFirstName());
-        System.out.println("1) Show Transcation History/n 2) Withdrawal\n 3) Deposit\n 4) Transfer \n 5) Quit ");
+        System.out.println("\n 1) Show Transcation History\n 2) Withdrawal\n 3) Deposit\n 4) Transfer \n 5) Quit ");
         System.out.println();
         System.out.print("Enter your choice : ");
         choice = sc.nextInt();
@@ -103,7 +107,7 @@ public class Main {
  }
 
 public static void transferFunds(User theUser, Scanner sc) {
-    int fromAcct = 0;
+    int fromAcct ;
     int toAcct;
     double amount;
     double acctBal;
@@ -111,7 +115,7 @@ public static void transferFunds(User theUser, Scanner sc) {
     //to transfer
     do {
         System.out.printf("Enter the Number (1-%d) of the account\n" +
-                "To transfer from :");
+                "To transfer from : ", theUser.numAccount());
         fromAcct = sc.nextInt();
         if (fromAcct < 0 || fromAcct >= theUser.numAccount()) {
             System.out.println("Invalid Accounts !!!!");
@@ -124,9 +128,110 @@ public static void transferFunds(User theUser, Scanner sc) {
 
          //Account to transfer to
     do {
-        System.out.println("Enter the number (1-%d) of the account\n");
-    }
+        System.out.printf("Enter the number (1-%d) of the account\n" +
+                "to transfer to: ", theUser.numAccount());
+        toAcct = sc.nextInt() - 1;
+        if (toAcct < 0 || toAcct >= theUser.numAccount()) {
+            System.out.println("Invalid Account, Please Try again");
+        }
+    } while (toAcct<0|| toAcct >= theUser.numAccount());
 
+//get Amount to transfer
+    do{
+        System.out.printf("Enter the amount you want to transfer(max #%.02f): #", acctBal);
+        amount = sc.nextDouble();
+        if(amount <0){
+            System.out.println("You don't have money!!!");
+        }
+        else if(amount > acctBal) {
+            System.out.printf("You can't transfer more than your balance" +
+                    "Your balance is #%.02f.\n", acctBal);
+        }
+        }  while (amount < 0 || amount > acctBal);
+
+    //do the transfer
+    theUser.addAcctTranscation(fromAcct,  -1*amount, String.format(
+            "Transfer to account %s", theUser.getAcctUUID(toAcct)));
+    theUser.addAcctTranscation(toAcct, amount, String.format(
+            "Transfer to account %s", theUser.getAcctUUID(fromAcct)));
+    }
+public static void withdrawFunds(User theUser, Scanner sc){
+    int fromAcct ;
+    double amount;
+    double acctBal;
+    String memo;
+
+    //to transfer
+    do {
+        System.out.printf("Enter the Number (1-%d) of the account\n" +
+                "To transfer from : ", theUser.numAccount());
+        fromAcct = sc.nextInt();
+        if (fromAcct < 0 || fromAcct >= theUser.numAccount()) {
+            System.out.println("Invalid Accounts !!!!");
+        }
+    }
+    while (fromAcct < 0 || fromAcct >= theUser.numAccount());
+
+    //getBalance
+    acctBal = theUser.getAcctBalance(fromAcct);
+
+      //get amount top transfer
+    do{
+        System.out.printf("Enter the amount you want to transfer(max #%.02f): #", acctBal);
+        amount = sc.nextDouble();
+        if(amount <0){
+            System.out.println("You don't have money!!!");
+        }
+        else if(amount > acctBal) {
+            System.out.printf("You can't transfer more than your balance" +
+                    "Your balance is #%.02f.\n", acctBal);
+        }
+    }  while (amount < 0 || amount > acctBal);
+    sc.nextLine();
+    System.out.println("Enter a memo : ");
+    memo = sc.nextLine();
+
+    //withdrawal
+    theUser.addAcctTranscation(fromAcct,-1*amount, memo);
+
+    }
+    public static void depositFunds(User theUser, Scanner sc){
+        int toAcct;
+        double amount;
+        double acctBal;
+        String memo;
+
+        //to transfer
+        do {
+            System.out.printf("Enter the Number (1-%d) of the account\n" +
+                    "To Deposit to : ", theUser.numAccount());
+            toAcct = sc.nextInt();
+            if (toAcct < 0 || toAcct >= theUser.numAccount()) {
+                System.out.println("Invalid Accounts !!!!");
+            }
+        }
+        while (toAcct < 0 || toAcct >= theUser.numAccount());
+
+        //getBalance
+        acctBal = theUser.getAcctBalance(toAcct);
+
+        //get amount top transfer
+        do{
+            System.out.printf("Enter the amount you want to Deposit(max #%.02f): #", acctBal);
+            amount = sc.nextDouble();
+            if(amount <0){
+                System.out.println("You don't have money!!!");
+            }
+            else if(amount > acctBal) {
+                System.out.printf("You can't transfer more than your balance" +
+                        "Your balance is #%.02f.\n", acctBal);
+            }
+        }  while (amount < 0 || amount > acctBal);
+
+        sc.nextLine();
+        System.out.println("Enter a memo");
+        memo = sc.nextLine();
+        theUser.addAcctTranscation(toAcct, amount, memo);
     }
 }
 

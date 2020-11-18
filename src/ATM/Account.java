@@ -63,11 +63,16 @@ public class Account {
      public void printTransHistory(){
         System.out.printf("\nTranscation History for account %s\n", this.uuid);
         for(int t = this.transcations.size()-1; t>=0; t--){
-            System.out.printf(this.transcations.get(t).getSummaryLine());
+            System.out.print(this.transcations.get(t).getSummaryLine());
         }
         System.out.println();
      }
+     public void addTranscation(double amount, String memo){
+        Transcation newTransc = new Transcation(amount, memo, this);
+        this.transcations.add(newTransc);
 
+
+     }
     }
 
 
